@@ -54,6 +54,18 @@ module.exports = {
         brown: {
           500: "#8B4513",
         },
+        retro: {
+          blue: '#0000FF',
+          green: '#00FF00',
+          yellow: '#FFFF00',
+          red: '#FF0000',
+          purple: '#800080',
+          teal: '#008080',
+          gray: '#808080',
+        },
+      },
+      fontFamily: {
+        retro: ['VT323', 'monospace'],
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -73,6 +85,9 @@ module.exports = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      boxShadow: {
+        'neon': '0 0 5px theme("colors.retro.yellow"), 0 0 10px theme("colors.retro.yellow"), 0 0 15px theme("colors.retro.yellow"), 0 0 20px theme("colors.retro.yellow")',
       },
     },
   },
