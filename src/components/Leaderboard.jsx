@@ -3,11 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const leaderboardData = [
-  { name: "Alice", score: 1250, avatar: "A" },
-  { name: "Bob", score: 1100, avatar: "B" },
-  { name: "Charlie", score: 950, avatar: "C" },
-  { name: "David", score: 900, avatar: "D" },
-  { name: "Eve", score: 850, avatar: "E" },
+  { name: "Alice", badgeScore: 575, avatar: "A" },
+  { name: "Bob", badgeScore: 500, avatar: "B" },
+  { name: "Charlie", badgeScore: 450, avatar: "C" },
+  { name: "David", badgeScore: 400, avatar: "D" },
+  { name: "Eve", badgeScore: 375, avatar: "E" },
 ];
 
 const Leaderboard = () => {
@@ -27,7 +27,7 @@ const Leaderboard = () => {
               </Avatar>
               <span className="text-lg">{user.name}</span>
             </div>
-            <span className="text-lg font-semibold">{user.score}</span>
+            <span className="text-lg font-semibold">{user.badgeScore} pts</span>
           </div>
         ))}
       </CardContent>
