@@ -29,13 +29,12 @@ const BadgeGrid = () => {
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {badges.map((badge, index) => (
-          <Card 
-            key={index} 
+          <Card
+            key={index}
             className="hover:shadow-xl transition-shadow duration-300 cursor-pointer transform hover:scale-105"
             onClick={() => setSelectedBadge(badge)}
           >
             <CardHeader className="text-center relative">
-              <Badge className={`absolute top-2 left-2 ${getTierColor(badge.tier)} text-white font-semibold px-3 py-1`}>{badge.tier}</Badge>
               {badge.count > 1 && (
                 <div className="absolute top-2 right-2 bg-[#0393d4] text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">
                   x{badge.count}
@@ -46,7 +45,8 @@ const BadgeGrid = () => {
               <div className="relative">
                 <img src={badge.image} alt={badge.name} className="w-80 h-80 object-contain mb-4" />
               </div>
-              <Badge className="bg-[#3f9c35] text-white font-semibold px-3 py-1 text-lg">{badge.name}</Badge>
+              <Badge className="bg-[#3f9c35] text-white font-semibold px-3 py-1 text-lg mb-2">{badge.name}</Badge>
+              <Badge className={`${getTierColor(badge.tier)} text-white font-semibold px-3 py-1 mb-2`}>{badge.tier}</Badge>
               <p className="text-sm text-gray-500 mt-2">Earned: {badge.date}</p>
             </CardContent>
           </Card>
