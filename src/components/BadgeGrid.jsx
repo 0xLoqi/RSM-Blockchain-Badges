@@ -5,9 +5,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 
 const badges = [
   { name: "Technical Member", description: "Blockchain Community Technical Member", image: "https://i.imgur.com/tspXtQQ.gif", date: "2024-03-15", score: 100 },
-  { name: "Smart Contract Expert", description: "Mastered Solidity programming", image: "https://imgur.com/a/qfsJvOO.gif", date: "2024-02-28", score: 150 },
+  { name: "Smart Contract Expert", description: "Mastered Solidity programming", image: "https://i.imgur.com/KwxWbRB.gif", date: "2024-02-28", score: 150 },
   { name: "DApp Developer", description: "Created a stunning decentralized application", image: "https://i.imgur.com/tspXtQQ.gif", date: "2024-01-10", score: 200 },
-  { name: "Blockchain Pioneer", description: "Completed first transaction on Base", image: "https://imgur.com/a/qfsJvOO.gif", date: "2023-12-05", score: 50 },
+  { name: "Blockchain Pioneer", description: "Completed first transaction on Base", image: "https://i.imgur.com/KwxWbRB.gif", date: "2023-12-05", score: 50 },
   { name: "Crypto Enthusiast", description: "Active participation in blockchain community", image: "https://i.imgur.com/tspXtQQ.gif", date: "2023-11-20", score: 75 },
 ];
 
