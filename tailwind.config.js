@@ -24,11 +24,11 @@ module.exports = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
+          DEFAULT: "#0393d4",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
+          DEFAULT: "#3f9c35",
           foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
@@ -50,18 +50,6 @@ module.exports = {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
-        },
-        brown: {
-          500: "#8B4513",
-        },
-        retro: {
-          blue: '#0000FF',
-          green: '#00FF00',
-          yellow: '#FFFF00',
-          red: '#FF0000',
-          purple: '#800080',
-          teal: '#008080',
-          gray: '#808080',
         },
       },
       fontFamily: {
