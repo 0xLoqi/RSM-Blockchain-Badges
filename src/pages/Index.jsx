@@ -8,9 +8,9 @@ import Challenges from '../components/Challenges';
 import NotificationCenter from '../components/NotificationCenter';
 
 const walletOptions = [
-  { name: "Coinbase Wallet", icon: "https://i.imgur.com/3C4FGxb.png" },
-  { name: "MetaMask", icon: "https://i.imgur.com/GWN4yfP.png" },
-  { name: "Rainbow", icon: "https://i.imgur.com/OMxgWxj.png" },
+  { name: "Coinbase Wallet", icon: "💰" },
+  { name: "MetaMask", icon: "🦊" },
+  { name: "Rainbow", icon: "🌈" },
 ];
 
 const Index = () => {
@@ -19,8 +19,16 @@ const Index = () => {
 
   const handleConnectWallet = async (walletName) => {
     // Simulating wallet connection
-    setSelectedWallet(walletName);
-    setIsWalletConnected(true);
+    try {
+      // This is a placeholder for actual wallet connection logic
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setSelectedWallet(walletName);
+      setIsWalletConnected(true);
+      // You would typically interact with the wallet API here
+      console.log(`Connected to ${walletName}`);
+    } catch (error) {
+      console.error("Failed to connect wallet:", error);
+    }
   };
 
   return (
@@ -28,7 +36,7 @@ const Index = () => {
       <header className="bg-[#0393d4] text-white py-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center">
-            <img src="https://i.imgur.com/zC3L9sL.png" alt="RSM Logo" className="h-16 mr-4" />
+            <img src="https://i.imgur.com/zC3L9sL.png" alt="RSM Logo" className="h-24 mr-4" />
             <h1 className="text-2xl font-bold">RSM Blockchain Community</h1>
           </div>
           <nav className="flex items-center">
@@ -90,7 +98,11 @@ const Index = () => {
       <footer className="bg-gray-200 text-gray-600 py-4 mt-8">
         <div className="container mx-auto flex justify-between items-center">
           <p>© 2024 RSM Blockchain Community. All rights reserved.</p>
-          <img src="https://i.imgur.com/zC3L9sL.png" alt="RSM Logo" className="h-14" />
+          <div className="flex items-center">
+            <p className="mr-2">Powered by</p>
+            <img src="https://seeklogo.com/images/C/coinbase-coin-logo-C86F46D7B8-seeklogo.com.png" alt="Base Logo" className="h-8" />
+          </div>
+          <img src="https://i.imgur.com/zC3L9sL.png" alt="RSM Logo" className="h-20" />
         </div>
       </footer>
     </div>
