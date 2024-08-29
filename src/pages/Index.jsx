@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ethers } from 'ethers';
 import { Award, Trophy, Target, Bell, Wallet } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -19,11 +20,55 @@ const Index = () => {
 
   const handleConnectWallet = async (walletName) => {
     try {
-      // This is a placeholder for actual wallet connection logic
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setSelectedWallet(walletName);
-      setIsWalletConnected(true);
-      console.log(`Connected to ${walletName}`);
+      if (typeof window.ethereum !== 'undefined') {
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+      
+        // Base Goerli Testnet configuration
+        const baseGoerliChainId = '0x14A33'; // 84531 in decimal
+        const baseGoerliConfig = {
+          chainId: baseGoerliChainId,
+          chainName: 'Base Goerli Testnet',
+          nativeCurrency: {
+            name: 'Ethereum',
+            symbol: 'ETH',
+            decimals: 18
+          },
+          rpcUrls: ['https://goerli.base.org'],
+          blockExplorerUrls: ['https://goerli.basescan.org']
+        };
+
+        try {
+          // Switch to Base Goerli Testnet
+          await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: baseGoerliChainId }],
+          });
+        } catch (switchError) {
+          // This error code indicates that the chain has not been added to MetaMask.
+          if (switchError.code === 4902) {
+            try {
+              await window.ethereum.request({
+                method: 'wallet_addEthereumChain',
+                params: [baseGoerliConfig],
+              });
+            } catch (addError) {
+              throw new Error("Failed to add Base Goerli network");
+            }
+          } else {
+            throw switchError;
+          }
+        }
+
+        const signer = provider.getSigner();
+        const address = await signer.getAddress();
+      
+        setSelectedWallet(walletName);
+        setIsWalletConnected(true);
+        console.log(`Connected to ${walletName} with address ${address} on Base Goerli Testnet`);
+      } else {
+        throw new Error("No Ethereum wallet found");
+      }
     } catch (error) {
       console.error("Failed to connect wallet:", error);
     }

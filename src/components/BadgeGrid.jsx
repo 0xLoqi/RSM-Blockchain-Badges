@@ -35,7 +35,6 @@ const BadgeGrid = () => {
             onClick={() => setSelectedBadge(badge)}
           >
             <CardHeader className="text-center relative">
-              <CardTitle className="text-2xl text-[#0393d4]">{badge.name}</CardTitle>
               <Badge className={`absolute top-2 left-2 ${getTierColor(badge.tier)} text-white font-semibold px-3 py-1`}>{badge.tier}</Badge>
               {badge.count > 1 && (
                 <div className="absolute top-2 right-2 bg-[#0393d4] text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">
