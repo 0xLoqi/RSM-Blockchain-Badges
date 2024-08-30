@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -16,43 +16,22 @@ const recentBadges = [
 ];
 
 const RecentBadgesFeed = () => {
-  const scrollRef = useRef(null);
-
-  useEffect(() => {
-    const scrollElement = scrollRef.current;
-    if (scrollElement) {
-      const scrollAnimation = () => {
-        if (scrollElement.scrollTop + scrollElement.clientHeight >= scrollElement.scrollHeight) {
-          scrollElement.scrollTop = 0;
-        } else {
-          scrollElement.scrollTop += 1;
-        }
-      };
-
-      const intervalId = setInterval(scrollAnimation, 50);
-
-      return () => clearInterval(intervalId);
-    }
-  }, []);
-
   return (
-    <Card className="w-full h-[400px] overflow-hidden">
+    <Card className="w-full">
       <CardHeader>
-        <CardTitle className="text-xl font-bold">Recent Badge Awards</CardTitle>
+        <CardTitle>Recent Badge Awards</CardTitle>
       </CardHeader>
       <CardContent>
-        <div ref={scrollRef} className="h-[320px] overflow-hidden">
-          <div className="space-y-4">
-            {recentBadges.concat(recentBadges).map((badge, index) => (
-              <div key={index} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                <div className="flex items-center space-x-3">
-                  <Badge className="px-2 py-1 text-xs">{badge.name}</Badge>
-                  <span className="text-sm font-medium text-gray-700">{badge.recipient}</span>
-                </div>
-                <span className="text-xs text-gray-500">{badge.date}</span>
+        <div className="space-y-4">
+          {recentBadges.map((badge, index) => (
+            <div key={index} className="flex justify-between items-center">
+              <div>
+                <Badge className="mr-2">{badge.name}</Badge>
+                <span className="text-sm text-gray-600">{badge.recipient}</span>
               </div>
-            ))}
-          </div>
+              <span className="text-sm text-gray-500">{badge.date}</span>
+            </div>
+          ))}
         </div>
       </CardContent>
     </Card>

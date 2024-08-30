@@ -1,52 +1,92 @@
-import React from 'react';
-import { Award, Trophy, Target, Bell } from 'lucide-react';
+import React, { useState } from 'react';
+import { ethers } from 'ethers';
+import { Award, Trophy, Target, Bell, Wallet } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import BadgeGrid from '../components/BadgeGrid';
 import Leaderboard from '../components/Leaderboard';
 import Challenges from '../components/Challenges';
 import NotificationCenter from '../components/NotificationCenter';
+import { Web3Provider } from '@ethersproject/providers';
 import Spline from '@splinetool/react-spline';
 import AllBadges from '../components/AllBadges';
 import RecentBadgesFeed from '../components/RecentBadgesFeed';
 import DetailedLeaderboard from '../components/DetailedLeaderboard';
-import { createThirdwebClient } from "thirdweb";
-import { ConnectButton } from "thirdweb/react";
-import { darkTheme } from "thirdweb/react";
-import { inAppWallet, createWallet } from "thirdweb/wallets";
-import { ethereum } from "thirdweb/chains";
 
-const client = createThirdwebClient({
-  clientId: "....",
-});
 
-const wallets = [
-  inAppWallet({
-    auth: {
-      options: [
-        "google",
-        "discord",
-        "telegram",
-        "farcaster",
-        "email",
-        "facebook",
-        "passkey",
-        "phone",
-      ],
-    },
-  }),
-  createWallet("io.metamask"),
-  createWallet("com.coinbase.wallet"),
-  createWallet("me.rainbow"),
+const walletOptions = [
+  { name: "Coinbase Wallet", icon: "💰" },
+  { name: "MetaMask", icon: "🦊" },
+  { name: "Rainbow", icon: "🌈" },
 ];
 
 const Index = () => {
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [selectedWallet, setSelectedWallet] = useState(null);
+  const [walletAddress, setWalletAddress] = useState(null);
+
+  const handleConnectWallet = async (walletName) => {
+    try {
+      let provider;
+
+      if (walletName === "Coinbase Wallet") {
+        const CoinbaseWalletSDK = await import('@coinbase/wallet-sdk').then(m => m.default);
+        const coinbaseWallet = new CoinbaseWalletSDK({
+          appName: 'RSM Blockchain Community',
+          appLogoUrl: 'https://i.imgur.com/zC3L9sL.png',
+          darkMode: false
+        });
+        provider = coinbaseWallet.makeWeb3Provider('https://sepolia.base.org', 84532);
+      } else if (typeof window.ethereum !== 'undefined') {
+        provider = new Web3Provider(window.ethereum);
+      } else {
+        throw new Error("No Ethereum wallet found");
+      }
+
+      await provider.send('eth_requestAccounts', []);
+
+      try {
+        await provider.send('wallet_switchEthereumChain', [{ chainId: '0x14A34' }]);
+      } catch (switchError) {
+        if (switchError.code === 4902) {
+          try {
+            await provider.send('wallet_addEthereumChain', [{
+              chainId: '0x14A34',
+              chainName: 'Base Sepolia Testnet',
+              nativeCurrency: { name: 'Ethereum', symbol: 'ETH', decimals: 18 },
+              rpcUrls: ['https://sepolia.base.org'],
+              blockExplorerUrls: ['https://sepolia-explorer.base.org']
+            }]);
+          } catch (addError) {
+            throw new Error("Failed to add Base Sepolia network");
+          }
+        } else {
+          throw switchError;
+        }
+      }
+
+      const signer = provider.getSigner();
+      const address = await signer.getAddress();
+
+      setSelectedWallet(walletName);
+      setIsWalletConnected(true);
+      setWalletAddress(address);
+      console.log(`Connected to ${walletName} with address ${address} on Base Sepolia Testnet`);
+    } catch (error) {
+      console.error("Failed to connect wallet:", error);
+    }
+  };
+
+  const shortenAddress = (address) => {
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 text-gray-800 flex flex-col">
       <header className="bg-[#0393d4] text-white py-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center">
-            <img src="https://i.imgur.com/zC3L9sL.png" alt="RSM Logo" className="h-24 mr-4 rounded-full shadow-md" />
+            <img src="https://i.imgur.com/zC3L9sL.png" alt="RSM Logo" className="h-24 mr-4 rounded-lg shadow-md" />
             <h1 className="text-2xl font-bold">RSM Blockchain Community</h1>
           </div>
           <nav className="flex items-center">
@@ -80,57 +120,48 @@ const Index = () => {
               <Target className="mr-2" /> Challenges
             </Button>
             <NotificationCenter />
-            <ConnectButton
-              client={client}
-              wallets={wallets}
-              theme={darkTheme({
-                colors: {
-                  modalBg: "#e1dbdb",
-                  borderColor: "#3f9c35",
-                  primaryText: "#009ada",
-                  accentText: "#009ada",
-                },
-              })}
-              connectModal={{ size: "compact" }}
-              accountAbstraction={{
-                chain: ethereum,
-                sponsorGas: true,
-              }}
-              auth={{
-                async doLogin(params) {
-                  // call your backend to verify the signed payload passed in params
-                },
-                async doLogout() {
-                  // call your backend to logout the user if needed
-                },
-                async getLoginPayload(params) {
-                  // call your backend and return the payload
-                },
-                async isLoggedIn() {
-                  // call your backend to check if the user is logged in
-                },
-              }}
-            />
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="ml-4 bg-[#3f9c35] hover:bg-[#3f9c35]/80 text-white"
+                >
+                  <Wallet className="mr-2" />
+                  {isWalletConnected ? shortenAddress(walletAddress) : "Connect Wallet"}
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Connect Your Wallet</DialogTitle>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  {walletOptions.map((wallet) => (
+                    <Button
+                      key={wallet.name}
+                      onClick={() => handleConnectWallet(wallet.name)}
+                      className="flex items-center justify-start"
+                    >
+                      <span className="text-2xl mr-4">{wallet.icon}</span>
+                      {wallet.name}
+                    </Button>
+                  ))}
+                </div>
+              </DialogContent>
+            </Dialog>
           </nav>
         </div>
       </header>
 
       <main className="container mx-auto mt-8 flex-grow">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <RecentBadgesFeed />
-          </div>
+        <RecentBadgesFeed />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
           <div className="md:col-span-2">
             <h2 className="text-3xl font-bold mb-6">Your Earned Badges</h2>
             <BadgeGrid />
           </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
-          <div className="md:col-span-2">
-            <Challenges />
-          </div>
           <div>
             <Leaderboard />
+            <Challenges />
           </div>
         </div>
         <div className="mt-8">
