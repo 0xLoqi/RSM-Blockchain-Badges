@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { ethers } from 'ethers';
-import { Award, Trophy, Target, Bell, Wallet } from 'lucide-react';
+import { Award, Trophy, Target, Bell, Wallet, Moon, Sun } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import BadgeGrid from '../components/BadgeGrid';
 import Leaderboard from '../components/Leaderboard';
 import Challenges from '../components/Challenges';
 import NotificationCenter from '../components/NotificationCenter';
-import { Web3Provider } from '@ethersproject/providers';
 import Spline from '@splinetool/react-spline';
 import AllBadges from '../components/AllBadges';
 import RecentBadgesFeed from '../components/RecentBadgesFeed';
 import DetailedLeaderboard from '../components/DetailedLeaderboard';
+import { useTheme } from "@/components/theme-provider";
+import ThemeToggle from '../components/ThemeToggle';
 
 
 const walletOptions = [
@@ -170,14 +170,17 @@ const Index = () => {
         </div>
       </main>
 
-      <footer className="bg-gray-200 text-gray-600 py-4 mt-8">
+      <footer className="bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-300 py-4 mt-8">
         <div className="container mx-auto flex justify-between items-center">
           <p>© 2024 RSM Blockchain Community. All rights reserved.</p>
           <div className="flex items-center">
             <img src="https://seeklogo.com/images/C/coinbase-coin-logo-C86F46D7B8-seeklogo.com.png" alt="Base Logo" className="h-8 mr-2" />
             <p>Powered by Base</p>
           </div>
-          <img src="https://i.imgur.com/Ib78a77.png" alt="RSM Logo" className="h-20" />
+          <div className="flex items-center">
+            <img src="https://i.imgur.com/Ib78a77.png" alt="RSM Logo" className="h-20 mr-4" />
+            <ThemeToggle />
+          </div>
         </div>
       </footer>
     </div>
