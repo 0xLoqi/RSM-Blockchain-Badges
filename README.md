@@ -65,3 +65,13 @@ Simply visit your project at [GPT Engineer](https://gptengineer.app/projects/314
 ## I want to use a custom domain - is that possible?
 
 We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify or GitHub pages. Visit our docs for more details: [Custom domains](https://docs.gptengineer.app/tips-tricks/custom-domain/)
+
+# To Do
+
+- [ ] Add a way to connect to Base Goerli Testnet
+
+it almost works it just need and RPC I think
+
+- [ ] Create 5 unique badges based on the documents
+
+I'll pick my favorite 5 badges. 
