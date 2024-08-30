@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -16,22 +16,42 @@ const recentBadges = [
 ];
 
 const RecentBadgesFeed = () => {
+  useEffect(() => {
+    const scrollContainer = document.getElementById("scroll-container");
+    const scrollSpeed = 1; // Adjust this value for speed
+
+    const scrollContent = () => {
+      if (scrollContainer) {
+        scrollContainer.scrollTop += scrollSpeed;
+        if (scrollContainer.scrollTop >= scrollContainer.scrollHeight - scrollContainer.clientHeight) {
+          scrollContainer.scrollTop = 0;
+        }
+      }
+    };
+
+    const intervalId = setInterval(scrollContent, 50); // Adjust the interval for smoothness
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   return (
     <Card className="w-full">
       <CardHeader>
         <CardTitle>Recent Badge Awards</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-          {recentBadges.map((badge, index) => (
-            <div key={index} className="flex justify-between items-center">
-              <div>
-                <Badge className="mr-2">{badge.name}</Badge>
-                <span className="text-sm text-gray-600">{badge.recipient}</span>
+        <div id="scroll-container" className="max-h-40 overflow-hidden relative">
+          <div className="space-y-4">
+            {recentBadges.map((badge, index) => (
+              <div key={index} className="flex justify-between items-center">
+                <div>
+                  <Badge className="mr-2">{badge.name}</Badge>
+                  <span className="text-sm text-gray-600">{badge.recipient}</span>
+                </div>
+                <span className="text-sm text-gray-500">{badge.date}</span>
               </div>
-              <span className="text-sm text-gray-500">{badge.date}</span>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </CardContent>
     </Card>

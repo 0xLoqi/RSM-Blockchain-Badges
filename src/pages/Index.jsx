@@ -206,9 +206,6 @@ const Index = () => {
                   </button>
                 </form>
               )}
-              {!isWalletConnected && (
-                <p>Connect your wallet to create new challenges.</p>
-              )}
             </div>
           </div>
         </div>
