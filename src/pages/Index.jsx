@@ -9,17 +9,10 @@ import NotificationCenter from '../components/NotificationCenter';
 import AllBadges from '../components/AllBadges';
 import RecentBadgesFeed from '../components/RecentBadgesFeed';
 import DetailedLeaderboard from '../components/DetailedLeaderboard';
-import { useTheme } from "@/components/theme-provider";
+import { useTheme } from "next-themes";
 import ThemeToggle from '../components/ThemeToggle';
 import { ConnectWallet } from "@thirdweb-dev/react";
 import CreateChallengeModal from '../components/CreateChallengeModal';
-
-
-const walletOptions = [
-  { name: "Coinbase Wallet", icon: "💰" },
-  { name: "MetaMask", icon: "🦊" },
-  { name: "Rainbow", icon: "🌈" },
-];
 
 const Index = () => {
   const { theme, setTheme } = useTheme();
@@ -36,7 +29,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-800 flex flex-col">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 flex flex-col">
       <header className="bg-[#0393d4] dark:bg-gray-800 text-white py-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center">
@@ -78,9 +71,7 @@ const Index = () => {
             </Button>
             <NotificationCenter />
             <ConnectWallet theme={theme} className="ml-4" />
-            <Button variant="ghost" className="text-white ml-4" onClick={toggleTheme}>
-              {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
-            </Button>
+            <ThemeToggle />
           </nav>
         </div>
       </header>
@@ -101,10 +92,6 @@ const Index = () => {
           isOpen={isCreateChallengeModalOpen}
           onClose={() => setIsCreateChallengeModalOpen(false)}
         />
-        {/* <div className="mt-8">
-          <h2 className="text-3xl font-bold mb-6">Explore in 3D</h2>
-          <Spline scene="https://prod.spline.design/7wckFeGi4nynx6uX/scene.splinecode" />
-        </div> */}
       </main>
 
       <footer className="bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-300 py-4 mt-8">
@@ -116,7 +103,6 @@ const Index = () => {
           </div>
           <div className="flex items-center">
             <img src="https://i.imgur.com/Ib78a77.png" alt="RSM Logo" className="h-20 mr-4" />
-            <ThemeToggle />
           </div>
         </div>
       </footer>
