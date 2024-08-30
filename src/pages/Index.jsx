@@ -96,11 +96,22 @@ const Index = () => {
                   <Award className="mr-2" /> All Badges
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-4xl">
+              <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto p-6">
                 <DialogHeader>
                   <DialogTitle>All Available Badges</DialogTitle>
                 </DialogHeader>
-                <AllBadges />
+                <div className="mt-4">
+                  <input
+                    type="text"
+                    placeholder="Search badges..."
+                    className="w-full p-2 mb-4 border rounded"
+                    onChange={(e) => {
+                      // Implement search functionality here
+                      console.log('Searching:', e.target.value);
+                    }}
+                  />
+                  <AllBadges />
+                </div>
               </DialogContent>
             </Dialog>
             <Dialog>
@@ -156,12 +167,49 @@ const Index = () => {
         <RecentBadgesFeed />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
           <div className="md:col-span-2">
-            <h2 className="text-3xl font-bold mb-6">Your Earned Badges</h2>
+            <h2 className="text-3xl font-bold mb-6">Your Badges</h2>
             <BadgeGrid />
           </div>
           <div>
             <Leaderboard />
             <Challenges />
+            <div className="mt-8">
+              <h3 className="text-2xl font-bold mb-4">Create New Challenge</h3>
+              {isWalletConnected && (
+                <form onSubmit={(e) => {
+                  e.preventDefault();
+                  // Implement challenge creation logic here
+                  console.log('Creating new challenge');
+                }}>
+                  <input
+                    type="text"
+                    placeholder="Challenge Name"
+                    className="w-full p-2 mb-2 border rounded"
+                    required
+                  />
+                  <textarea
+                    placeholder="Challenge Description"
+                    className="w-full p-2 mb-2 border rounded"
+                    required
+                  ></textarea>
+                  <input
+                    type="text"
+                    placeholder="Badge Name for Completion"
+                    className="w-full p-2 mb-2 border rounded"
+                    required
+                  />
+                  <button
+                    type="submit"
+                    className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+                  >
+                    Create Challenge
+                  </button>
+                </form>
+              )}
+              {!isWalletConnected && (
+                <p>Connect your wallet to create new challenges.</p>
+              )}
+            </div>
           </div>
         </div>
         <div className="mt-8">
