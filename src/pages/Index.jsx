@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
-import { Award, Trophy, Target, Bell, Wallet, Moon, Sun } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Award, Trophy, Target, Bell, Wallet, Moon, Sun, Plus } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import BadgeGrid from '../components/BadgeGrid';
 import Leaderboard from '../components/Leaderboard';
 import Challenges from '../components/Challenges';
 import NotificationCenter from '../components/NotificationCenter';
-import Spline from '@splinetool/react-spline';
 import AllBadges from '../components/AllBadges';
 import RecentBadgesFeed from '../components/RecentBadgesFeed';
 import DetailedLeaderboard from '../components/DetailedLeaderboard';
 import { useTheme } from "@/components/theme-provider";
 import ThemeToggle from '../components/ThemeToggle';
+import { ConnectWallet } from "@thirdweb-dev/react";
+import CreateChallengeModal from '../components/CreateChallengeModal';
 
 
 const walletOptions = [
@@ -21,75 +22,31 @@ const walletOptions = [
 ];
 
 const Index = () => {
-  const [isWalletConnected, setIsWalletConnected] = useState(false);
-  const [selectedWallet, setSelectedWallet] = useState(null);
-  const [walletAddress, setWalletAddress] = useState(null);
+  const { theme, setTheme } = useTheme();
+  const [isCreateChallengeModalOpen, setIsCreateChallengeModalOpen] = useState(false);
 
-  const handleConnectWallet = async (walletName) => {
-    try {
-      let provider;
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove("light", "dark");
+    root.classList.add(theme);
+  }, [theme]);
 
-      if (walletName === "Coinbase Wallet") {
-        const CoinbaseWalletSDK = await import('@coinbase/wallet-sdk').then(m => m.default);
-        const coinbaseWallet = new CoinbaseWalletSDK({
-          appName: 'RSM Blockchain Community',
-          appLogoUrl: 'https://i.imgur.com/zC3L9sL.png',
-          darkMode: false
-        });
-        provider = coinbaseWallet.makeWeb3Provider('https://sepolia.base.org', 84532);
-      } else if (typeof window.ethereum !== 'undefined') {
-        provider = new Web3Provider(window.ethereum);
-      } else {
-        throw new Error("No Ethereum wallet found");
-      }
-
-      await provider.send('eth_requestAccounts', []);
-
-      try {
-        await provider.send('wallet_switchEthereumChain', [{ chainId: '0x14A34' }]);
-      } catch (switchError) {
-        if (switchError.code === 4902) {
-          try {
-            await provider.send('wallet_addEthereumChain', [{
-              chainId: '0x14A34',
-              chainName: 'Base Sepolia Testnet',
-              nativeCurrency: { name: 'Ethereum', symbol: 'ETH', decimals: 18 },
-              rpcUrls: ['https://sepolia.base.org'],
-              blockExplorerUrls: ['https://sepolia-explorer.base.org']
-            }]);
-          } catch (addError) {
-            throw new Error("Failed to add Base Sepolia network");
-          }
-        } else {
-          throw switchError;
-        }
-      }
-
-      const signer = provider.getSigner();
-      const address = await signer.getAddress();
-
-      setSelectedWallet(walletName);
-      setIsWalletConnected(true);
-      setWalletAddress(address);
-      console.log(`Connected to ${walletName} with address ${address} on Base Sepolia Testnet`);
-    } catch (error) {
-      console.error("Failed to connect wallet:", error);
-    }
-  };
-
-  const shortenAddress = (address) => {
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
   };
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-800 flex flex-col">
-      <header className="bg-[#0393d4] text-white py-4 shadow-md">
+      <header className="bg-[#0393d4] dark:bg-gray-800 text-white py-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center">
             <img src="https://i.imgur.com/zC3L9sL.png" alt="RSM Logo" className="h-24 mr-4 rounded-lg shadow-md" />
             <h1 className="text-2xl font-bold">RSM Blockchain Community</h1>
           </div>
           <nav className="flex items-center">
+            <Button variant="ghost" className="text-white mr-4" onClick={() => setIsCreateChallengeModalOpen(true)}>
+              <Plus className="mr-2" /> Create Challenge
+            </Button>
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant="ghost" className="text-white mr-4">
@@ -100,18 +57,7 @@ const Index = () => {
                 <DialogHeader>
                   <DialogTitle>All Available Badges</DialogTitle>
                 </DialogHeader>
-                <div className="mt-4">
-                  <input
-                    type="text"
-                    placeholder="Search badges..."
-                    className="w-full p-2 mb-4 border rounded"
-                    onChange={(e) => {
-                      // Implement search functionality here
-                      console.log('Searching:', e.target.value);
-                    }}
-                  />
-                  <AllBadges />
-                </div>
+                <AllBadges />
               </DialogContent>
             </Dialog>
             <Dialog>
@@ -131,34 +77,10 @@ const Index = () => {
               <Target className="mr-2" /> Challenges
             </Button>
             <NotificationCenter />
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="ml-4 bg-[#3f9c35] hover:bg-[#3f9c35]/80 text-white"
-                >
-                  <Wallet className="mr-2" />
-                  {isWalletConnected ? shortenAddress(walletAddress) : "Connect Wallet"}
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Connect Your Wallet</DialogTitle>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  {walletOptions.map((wallet) => (
-                    <Button
-                      key={wallet.name}
-                      onClick={() => handleConnectWallet(wallet.name)}
-                      className="flex items-center justify-start"
-                    >
-                      <span className="text-2xl mr-4">{wallet.icon}</span>
-                      {wallet.name}
-                    </Button>
-                  ))}
-                </div>
-              </DialogContent>
-            </Dialog>
+            <ConnectWallet theme={theme} className="ml-4" />
+            <Button variant="ghost" className="text-white ml-4" onClick={toggleTheme}>
+              {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+            </Button>
           </nav>
         </div>
       </header>
@@ -173,45 +95,12 @@ const Index = () => {
           <div>
             <Leaderboard />
             <Challenges />
-            <div className="mt-8">
-              <h3 className="text-2xl font-bold mb-4">Create New Challenge</h3>
-              {isWalletConnected && (
-                <form onSubmit={(e) => {
-                  e.preventDefault();
-                  // Implement challenge creation logic here
-                  console.log('Creating new challenge');
-                }}>
-                  <input
-                    type="text"
-                    placeholder="Challenge Name"
-                    className="w-full p-2 mb-2 border rounded"
-                    required
-                  />
-                  <textarea
-                    placeholder="Challenge Description"
-                    className="w-full p-2 mb-2 border rounded"
-                    required
-                  ></textarea>
-                  <input
-                    type="text"
-                    placeholder="Badge Name for Completion"
-                    className="w-full p-2 mb-2 border rounded"
-                    required
-                  />
-                  <button
-                    type="submit"
-                    className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-                  >
-                    Create Challenge
-                  </button>
-                </form>
-              )}
-              {!isWalletConnected && (
-                <p>Connect your wallet to create new challenges.</p>
-              )}
-            </div>
           </div>
         </div>
+        <CreateChallengeModal
+          isOpen={isCreateChallengeModalOpen}
+          onClose={() => setIsCreateChallengeModalOpen(false)}
+        />
         {/* <div className="mt-8">
           <h2 className="text-3xl font-bold mb-6">Explore in 3D</h2>
           <Spline scene="https://prod.spline.design/7wckFeGi4nynx6uX/scene.splinecode" />

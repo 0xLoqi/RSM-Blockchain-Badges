@@ -24,34 +24,36 @@ const DetailedLeaderboard = () => {
   );
 
   return (
-    <div>
+    <div className="max-h-[60vh] overflow-y-auto">
       <Input
         type="text"
         placeholder="Search by name or badge..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="mb-4"
+        className="mb-4 sticky top-0 z-10 bg-white dark:bg-gray-800"
       />
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Rank</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Score</TableHead>
-            <TableHead>Badges</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredData.map((user) => (
-            <TableRow key={user.rank}>
-              <TableCell>{user.rank}</TableCell>
-              <TableCell>{user.name}</TableCell>
-              <TableCell>{user.score}</TableCell>
-              <TableCell>{user.badges.join(", ")}</TableCell>
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="sticky top-12 bg-white dark:bg-gray-800">Rank</TableHead>
+              <TableHead className="sticky top-12 bg-white dark:bg-gray-800">Name</TableHead>
+              <TableHead className="sticky top-12 bg-white dark:bg-gray-800">Score</TableHead>
+              <TableHead className="sticky top-12 bg-white dark:bg-gray-800">Badges</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {filteredData.map((user) => (
+              <TableRow key={user.rank}>
+                <TableCell>{user.rank}</TableCell>
+                <TableCell>{user.name}</TableCell>
+                <TableCell>{user.score}</TableCell>
+                <TableCell>{user.badges.join(", ")}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };
