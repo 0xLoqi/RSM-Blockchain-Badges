@@ -140,10 +140,10 @@ const Index = () => {
             <Challenges />
           </div>
         </div>
-        <div className="mt-8">
+        {/* <div className="mt-8">
           <h2 className="text-3xl font-bold mb-6">Explore in 3D</h2>
           <Spline scene="https://prod.spline.design/7wckFeGi4nynx6uX/scene.splinecode" />
-        </div>
+        </div> */}
       </main>
 
       <footer className="bg-gray-200 text-gray-600 py-4 mt-8">
