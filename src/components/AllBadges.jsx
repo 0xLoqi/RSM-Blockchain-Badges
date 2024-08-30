@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 
 const badgesData = [
@@ -100,6 +100,10 @@ const AllBadges = () => {
     badge.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleBadgeClick = useCallback((badge) => {
+    setSelectedBadge(badge);
+  }, []);
+
   return (
     <div className="p-4">
       <Input
@@ -111,7 +115,7 @@ const AllBadges = () => {
       />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto">
         {filteredBadges.map((badge, index) => (
-          <Card key={index} className="hover:shadow-xl transition-shadow duration-300 cursor-pointer" onClick={() => setSelectedBadge(badge)}>
+          <Card key={index} className="hover:shadow-xl transition-shadow duration-300 cursor-pointer" onClick={() => handleBadgeClick(badge)}>
             <CardHeader>
               <CardTitle>{badge.name}</CardTitle>
             </CardHeader>
