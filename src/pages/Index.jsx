@@ -9,6 +9,9 @@ import Challenges from '../components/Challenges';
 import NotificationCenter from '../components/NotificationCenter';
 import { Web3Provider } from '@ethersproject/providers';
 import Spline from '@splinetool/react-spline';
+import AllBadges from '../components/AllBadges';
+import RecentBadgesFeed from '../components/RecentBadgesFeed';
+import DetailedLeaderboard from '../components/DetailedLeaderboard';
 
 
 const walletOptions = [
@@ -87,12 +90,32 @@ const Index = () => {
             <h1 className="text-2xl font-bold">RSM Blockchain Community</h1>
           </div>
           <nav className="flex items-center">
-            <Button variant="ghost" className="text-white mr-4">
-              <Award className="mr-2" /> All Badges
-            </Button>
-            <Button variant="ghost" className="text-white mr-4">
-              <Trophy className="mr-2" /> Leaderboard
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="ghost" className="text-white mr-4">
+                  <Award className="mr-2" /> All Badges
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-4xl">
+                <DialogHeader>
+                  <DialogTitle>All Available Badges</DialogTitle>
+                </DialogHeader>
+                <AllBadges />
+              </DialogContent>
+            </Dialog>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="ghost" className="text-white mr-4">
+                  <Trophy className="mr-2" /> Leaderboard
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-4xl">
+                <DialogHeader>
+                  <DialogTitle>Detailed Leaderboard</DialogTitle>
+                </DialogHeader>
+                <DetailedLeaderboard />
+              </DialogContent>
+            </Dialog>
             <Button variant="ghost" className="text-white mr-4">
               <Target className="mr-2" /> Challenges
             </Button>
@@ -130,7 +153,8 @@ const Index = () => {
       </header>
 
       <main className="container mx-auto mt-8 flex-grow">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <RecentBadgesFeed />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
           <div className="md:col-span-2">
             <h2 className="text-3xl font-bold mb-6">Your Earned Badges</h2>
             <BadgeGrid />
