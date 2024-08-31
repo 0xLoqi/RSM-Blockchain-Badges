@@ -6,8 +6,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { navItems } from "./nav-items";
 import { ThemeProvider } from "next-themes";
 import { ThirdwebProvider, metamaskWallet, coinbaseWallet, walletConnect } from "@thirdweb-dev/react";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { Toaster } from "@/components/ui/sonner";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -45,7 +43,5 @@ const App = () => (
     <ReactQueryDevtools initialIsOpen={false} />
   </QueryClientProvider>
 );
-
-export default App;
 
 export default App;
