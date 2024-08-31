@@ -6,19 +6,26 @@ import { navItems } from "./nav-items";
 import { ThemeProvider } from "next-themes";
 import { ThirdwebProvider, metamaskWallet, coinbaseWallet, walletConnect } from "@thirdweb-dev/react";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: false,
+    },
+  },
+});
 
 const App = () => (
-  <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-    <ThirdwebProvider
-      supportedWallets={[
-        metamaskWallet({ recommended: true }),
-        coinbaseWallet(),
-        walletConnect(),
-      ]}
-      clientId="9b75a93ae30f590afc1703447af59a84"
-    >
-      <QueryClientProvider client={queryClient}>
+  <QueryClientProvider client={queryClient}>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <ThirdwebProvider
+        supportedWallets={[
+          metamaskWallet({ recommended: true }),
+          coinbaseWallet(),
+          walletConnect(),
+        ]}
+        clientId="9b75a93ae30f590afc1703447af59a84"
+      >
         <TooltipProvider>
           <Toaster />
           <BrowserRouter>
@@ -29,9 +36,9 @@ const App = () => (
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
-      </QueryClientProvider>
-    </ThirdwebProvider>
-  </ThemeProvider>
+      </ThirdwebProvider>
+    </ThemeProvider>
+  </QueryClientProvider>
 );
 
 export default App;
