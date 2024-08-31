@@ -9,15 +9,15 @@ import NotificationCenter from '../components/NotificationCenter';
 import AllBadges from '../components/AllBadges';
 import RecentBadgesFeed from '../components/RecentBadgesFeed';
 import DetailedLeaderboard from '../components/DetailedLeaderboard';
-import { useTheme } from "@/components/theme-provider";
+import { useTheme } from "next-themes";
 import ThemeToggle from '../components/ThemeToggle';
 import { ConnectWallet } from "@thirdweb-dev/react";
 
 const Index = () => {
-  const { theme } = useTheme();
+  const { theme, setTheme } = useTheme();
 
   return (
-    <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-800'} flex flex-col`}>
+    <div className={`min-h-screen ${theme === 'dark' ? 'dark' : ''} bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white flex flex-col`}>
       <header className="bg-[#0393d4] text-white py-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center">
