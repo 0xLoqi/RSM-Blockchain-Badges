@@ -1,6 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from 'react-query/devtools';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { navItems } from "./nav-items";
 import { ThemeProvider } from "next-themes";
@@ -13,7 +14,6 @@ const queryClient = new QueryClient({
       retry: false,
     },
   },
-  contextSharing: true,
 });
 
 const App = () => (
@@ -26,7 +26,6 @@ const App = () => (
           walletConnect(),
         ]}
         clientId="9b75a93ae30f590afc1703447af59a84"
-        queryClient={queryClient}
       >
         <TooltipProvider>
           <Toaster />
@@ -40,6 +39,7 @@ const App = () => (
         </TooltipProvider>
       </ThirdwebProvider>
     </ThemeProvider>
+    <ReactQueryDevtools initialIsOpen={false} />
   </QueryClientProvider>
 );
 
