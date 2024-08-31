@@ -25,6 +25,7 @@ const App = () => (
           walletConnect(),
         ]}
         clientId="9b75a93ae30f590afc1703447af59a84"
+        queryClient={queryClient}
       >
         <TooltipProvider>
           <Toaster />
