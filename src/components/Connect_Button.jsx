@@ -5,10 +5,10 @@ import {
     inAppWallet,
     createWallet,
 } from "thirdweb/wallets";
-import { ethereum } from "thirdweb/chains";
+import { BaseGoerli } from "thirdweb/chains";
 
 const client = createThirdwebClient({
-    clientId: "....",
+    clientId: "9b75a93ae30f590afc1703447af59a84",
 });
 
 const wallets = [
@@ -45,7 +45,7 @@ function Example() {
             })}
             connectModal={{ size: "compact" }}
             accountAbstraction={{
-                chain: ethereum, // replace with the chain you want
+                chain: BaseGoerli, // replace with the chain you want
                 sponsorGas: true,
             }}
             auth={{
