@@ -13,6 +13,7 @@ const queryClient = new QueryClient({
       retry: false,
     },
   },
+  contextSharing: true,
 });
 
 const App = () => (
