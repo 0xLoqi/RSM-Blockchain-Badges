@@ -1,11 +1,11 @@
 import { createThirdwebClient } from "thirdweb";
 import { ConnectButton } from "thirdweb/react";
-import { darkTheme } from "thirdweb/react";
+import { lightTheme } from "thirdweb/react";
 import {
     inAppWallet,
     createWallet,
 } from "thirdweb/wallets";
-import { BaseGoerli } from "thirdweb/chains";
+import { ethereum } from "thirdweb/chains";
 
 const client = createThirdwebClient({
     clientId: "9b75a93ae30f590afc1703447af59a84",
@@ -23,47 +23,41 @@ const wallets = [
                 "facebook",
                 "passkey",
                 "phone",
+                "apple",
             ],
         },
     }),
     createWallet("io.metamask"),
     createWallet("com.coinbase.wallet"),
     createWallet("me.rainbow"),
+    createWallet("io.rabby"),
 ];
 
-function Example() {
+function ConnectButtonWrapper() {
     return (
         <ConnectButton
             client={client}
             wallets={wallets}
-            theme={darkTheme({
+            theme={lightTheme({
                 colors: {
-                    modalBg: "#e1dbdb",
                     borderColor: "#3f9c35",
-                    primaryText: "#000000",
+                    separatorLine: "#3f9c35",
+                    primaryText: "#009cde",
+                    accentText: "#009cde",
                 },
             })}
-            connectModal={{ size: "compact" }}
-            accountAbstraction={{
-                chain: BaseGoerli, // replace with the chain you want
-                sponsorGas: true,
+            connectButton={{ label: "Connect Wallet" }}
+            connectModal={{
+                size: "wide",
+                titleIcon: "https://i.imgur.com/Ib78a77.png",
+                showThirdwebBranding: false,
             }}
-            auth={{
-                async doLogin(params) {
-                    // call your backend to verify the signed payload passed in params
-                },
-                async doLogout() {
-                    // call your backend to logout the user if needed
-                },
-                async getLoginPayload(params) {
-                    // call your backend and return the payload
-                },
-                async isLoggedIn() {
-                    // call your backend to check if the user is logged in
-                },
+            accountAbstraction={{
+                chain: ethereum, // replace with the chain you want
+                sponsorGas: true,
             }}
         />
     );
 }
 
-export default Connect_Button;
+export default ConnectButtonWrapper;

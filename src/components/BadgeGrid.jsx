@@ -4,11 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 const badges = [
-  { name: "Technical Member", description: "Blockchain Community Technical Member", image: "https://i.imgur.com/KwxWbRB.gif", date: "2024-03-15", score: 100, tier: "Tier I", count: 2, metadata: { issuer: "RSM", blockchain: "Ethereum", tokenId: "0x123" } },
-  { name: "Smart Contract Expert", description: "Mastered Solidity programming", image: "https://i.imgur.com/KwxWbRB.gif", date: "2024-02-28", score: 150, tier: "Tier II", count: 1, metadata: { issuer: "RSM", blockchain: "Polygon", tokenId: "0x456" } },
+  { name: "Technical Member", description: "Blockchain Community Technical Member", image: "https://i.imgur.com/KwxWbRB.gif", date: "2024-03-15", score: 100, tier: "Tier I", count: 2, metadata: { issuer: "RSM", blockchain: "Base", tokenId: "0x123" } },
+  { name: "Smart Contract Expert", description: "Mastered Solidity programming", image: "https://i.imgur.com/KwxWbRB.gif", date: "2024-02-28", score: 150, tier: "Tier II", count: 1, metadata: { issuer: "RSM", blockchain: "Base", tokenId: "0x456" } },
   { name: "DApp Developer", description: "Created a stunning decentralized application", image: "https://i.imgur.com/tspXtQQ.gif", date: "2024-01-10", score: 200, tier: "Tier III", count: 3, metadata: { issuer: "RSM", blockchain: "Base", tokenId: "0x789" } },
   { name: "Blockchain Pioneer", description: "Completed first transaction on Base", image: "https://i.imgur.com/KwxWbRB.gif", date: "2023-12-05", score: 50, tier: "Tier IV", count: 1, metadata: { issuer: "RSM", blockchain: "Base", tokenId: "0xabc" } },
-  { name: "Crypto Enthusiast", description: "Active participation in blockchain community", image: "https://i.imgur.com/tspXtQQ.gif", date: "2023-11-20", score: 75, tier: "Tier V", count: 2, metadata: { issuer: "RSM", blockchain: "Ethereum", tokenId: "0xdef" } },
+  { name: "Crypto Enthusiast", description: "Active participation in blockchain community", image: "https://i.imgur.com/tspXtQQ.gif", date: "2023-11-20", score: 75, tier: "Tier V", count: 2, metadata: { issuer: "RSM", blockchain: "Base", tokenId: "0xdef" } },
 ];
 
 const BadgeGrid = () => {
