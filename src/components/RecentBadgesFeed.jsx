@@ -37,7 +37,7 @@ const RecentBadgesFeed = () => {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Recent Badge Awards</CardTitle>
+        <CardTitle className="text-foreground">Recent Badge Awards</CardTitle>
       </CardHeader>
       <CardContent>
         <div id="scroll-container" className="max-h-40 overflow-hidden relative">
@@ -46,9 +46,9 @@ const RecentBadgesFeed = () => {
               <div key={index} className="flex justify-between items-center">
                 <div>
                   <Badge className="mr-2">{badge.name}</Badge>
-                  <span className="text-sm text-gray-600">{badge.recipient}</span>
+                  <span className="text-sm text-foreground dark:text-gray-300">{badge.recipient}</span>
                 </div>
-                <span className="text-sm text-gray-500">{badge.date}</span>
+                <span className="text-sm text-muted-foreground dark:text-gray-400">{badge.date}</span>
               </div>
             ))}
           </div>
