@@ -117,20 +117,20 @@ const AllBadges = () => {
         {filteredBadges.map((badge, index) => (
           <Card key={index} className="hover:shadow-xl transition-shadow duration-300 cursor-pointer" onClick={() => handleBadgeClick(badge)}>
             <CardHeader>
-              <CardTitle>{badge.name}</CardTitle>
+              <CardTitle className="text-lg text-white">{badge.name}</CardTitle>
             </CardHeader>
             <CardContent>
               <img src={badge.image} alt={badge.name} className="w-full h-32 object-contain mb-2" />
-              <p className="text-sm text-gray-600 mb-2">{badge.description}</p>
+              <p className="text-sm text-gray-300 mb-2">{badge.description}</p>
               <Badge className="bg-blue-500 text-white">{badge.weight} points</Badge>
             </CardContent>
           </Card>
         ))}
       </div>
       <Dialog open={!!selectedBadge} onOpenChange={() => setSelectedBadge(null)}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] bg-gray-800 text-white">
           <DialogHeader>
-            <DialogTitle>{selectedBadge?.name}</DialogTitle>
+            <DialogTitle className="text-2xl font-bold">{selectedBadge?.name}</DialogTitle>
           </DialogHeader>
           <div className="mt-4">
             <img src={selectedBadge?.image} alt={selectedBadge?.name} className="w-full h-48 object-contain mb-4" />

@@ -33,19 +33,11 @@ const Index = () => {
                   <Award className="mr-2" /> All Badges
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto p-6">
+              <DialogContent className="max-w-4xl h-[80vh] p-6 scrollbar-custom">
                 <DialogHeader>
                   <DialogTitle>All Available Badges</DialogTitle>
                 </DialogHeader>
-                <div className="mt-4">
-                  <input
-                    type="text"
-                    placeholder="Search badges..."
-                    className="w-full p-2 mb-4 border rounded"
-                    onChange={(e) => {
-                      console.log('Searching:', e.target.value);
-                    }}
-                  />
+                <div className="mt-4 h-full overflow-y-auto pr-2 smooth-scroll">
                   <AllBadges />
                 </div>
               </DialogContent>
