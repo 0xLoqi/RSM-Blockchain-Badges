@@ -1,77 +1,93 @@
-# Welcome to your GPT Engineer project
+# RSM Blockchain Badges Platform
 
-## Project info
+## Overview
 
-**Project**: badgeville-funquest
+The RSM Blockchain Badges Platform is a cutting-edge web application designed to incentivize and recognize professional development within the blockchain space. This platform leverages blockchain technology to issue, manage, and display digital badges that represent skills, achievements, and contributions in the field.
 
-**URL**: https://run.gptengineer.app/projects/314b6377-1f47-41f2-b81d-7540d45c512e/improve
+## Key Features
 
-## How can I edit this code?
+- **Blockchain-Based Badge Issuance**: Securely mint and distribute badges as non-fungible tokens (NFTs).
+- **User Authentication**: Seamless wallet connection for secure user identification and badge ownership.
+- **Badge Showcase**: Dynamic display of earned and collected badges with detailed information.
+- **Leaderboard**: Real-time ranking system to foster healthy competition and engagement.
+- **Challenge System**: Ongoing tasks and objectives to encourage continuous learning and participation.
+- **Responsive Design**: Fully responsive interface ensuring a consistent experience across all devices.
 
-There are several ways of editing your application.
+## Technology Stack
 
-**Use GPT Engineer**
+- **Frontend**: React.js with Next.js for server-side rendering and optimal performance
+- **Styling**: Tailwind CSS for utility-first styling and dark mode support
+- **Blockchain Integration**: Thirdweb SDK for seamless Web3 functionality
+- **State Management**: React Hooks and Context API for efficient state handling
+- **Build Tool**: Vite for lightning-fast builds and hot module replacement
 
-Simply visit the GPT Engineer project at [GPT Engineer](https://gptengineer.app/projects/314b6377-1f47-41f2-b81d-7540d45c512e/improve) and start prompting.
+## Getting Started
 
-Changes made via gptengineer.app will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+- Node.js (v14.0.0 or later)
+- npm (v6.0.0 or later)
+- Git
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in the GPT Engineer UI.
+### Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+1. Clone the repository:
+   ```
+   git clone https://github.com/your-org/rsm-blockchain-badges.git
+   cd rsm-blockchain-badges
+   ```
 
-Follow these steps:
+2. Install dependencies:
+   ```
+   npm install
+   ```
 
-```sh
-git clone https://github.com/GPT-Engineer-App/badgeville-funquest.git
-cd badgeville-funquest
-npm i
+3. Set up environment variables:
+   ```
+   cp .env.example .env.local
+   ```
+   Edit `.env.local` with your specific configuration.
 
-# This will run a dev server with auto reloading and an instant preview.
-npm run dev
-```
+4. Start the development server:
+   ```
+   npm run dev
+   ```
 
-**Edit a file directly in GitHub**
+5. Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Development Workflow
 
-**Use GitHub Codespaces**
+- **Code Style**: We adhere to the Airbnb JavaScript Style Guide. ESLint and Prettier are configured for code consistency.
+- **Branching Strategy**: We follow the Git Flow workflow. Create feature branches from `develop` and submit pull requests for review.
+- **Testing**: Write unit tests for new features using Jest and React Testing Library. Ensure all tests pass before submitting PRs.
+- **Documentation**: Update this README and inline code comments as necessary when adding new features or making significant changes.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Deployment
 
-## What technologies are used for this project?
+Our CI/CD pipeline automatically deploys the `main` branch to our staging environment. Production deployments are manually triggered after QA approval.
 
-This project is built with .
+For manual deployments:
 
-- Vite
-- React
-- shadcn-ui
-- Tailwind CSS
+1. Build the project:
+   ```
+   npm run build
+   ```
 
-## How can I deploy this project?
+2. Deploy the `dist` folder to your preferred hosting service (e.g., Netlify, Vercel, AWS S3).
 
-All GPT Engineer projects can be deployed directly via the GPT Engineer app.
+## Contributing
 
-Simply visit your project at [GPT Engineer](https://gptengineer.app/projects/314b6377-1f47-41f2-b81d-7540d45c512e/improve) and click on Share -> Publish.
+We welcome contributions! Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
-## I want to use a custom domain - is that possible?
+## License
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify or GitHub pages. Visit our docs for more details: [Custom domains](https://docs.gptengineer.app/tips-tricks/custom-domain/)
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
-# To Do
+## Acknowledgments
 
-- [ ] Add a way to connect to Base Goerli Testnet
+- RSM for their vision and support in promoting blockchain education
+- The open-source community for the invaluable tools and libraries that make this project possible
 
-it almost works it just need and RPC I think
+## Contact
 
-- [ ] Create 5 unique badges based on the documents
-
-I'll pick my favorite 5 badges. 
+For any inquiries or support, please contact the development team at blockchain-badges@rsm.com.
