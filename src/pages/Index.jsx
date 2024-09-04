@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Award, Trophy, Target, Sun, Moon } from 'lucide-react';
+import { Award, Trophy, Target, Sun, Moon, HelpCircle } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import BadgeGrid from '../components/BadgeGrid';
@@ -13,10 +13,21 @@ import { useTheme } from "next-themes";
 import ThemeToggle from '../components/ThemeToggle';
 import { ConnectWallet } from "@thirdweb-dev/react";
 import ChallengesModal from '../components/ChallengesModal';
+import AboutModal from '../components/AboutModal';
+import BadgeToggle from '../components/BadgeToggle';
+import ConnectWalletPrompt from '../components/ConnectWalletPrompt';
+import { useAddress, useConnectionStatus } from "@thirdweb-dev/react";
 
 const Index = () => {
   const { theme, setTheme } = useTheme();
   const [isChallengesModalOpen, setIsChallengesModalOpen] = useState(false);
+  const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
+  const [badgeFilter, setBadgeFilter] = useState('earned');
+
+  const address = useAddress();
+  const connectionStatus = useConnectionStatus();
+
+  const isConnected = connectionStatus === "connected" && address;
 
   return (
     <div className={`min-h-screen ${theme === 'dark' ? 'dark' : ''} bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white flex flex-col`}>
@@ -24,53 +35,47 @@ const Index = () => {
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center">
             <img src="https://i.imgur.com/zC3L9sL.png" alt="RSM Logo" className="h-24 mr-4 rounded-lg shadow-md" />
-            <h1 className="text-2xl font-bold">RSM Blockchain Community</h1>
+            <h1 className="text-2xl font-bold">RSM Blockchain Badges</h1>
           </div>
-          <nav className="flex items-center space-x-4">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="ghost" className="text-white">
-                  <Award className="mr-2" /> All Badges
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-4xl h-[80vh] p-6 scrollbar-custom">
-                <DialogHeader>
-                  <DialogTitle>All Available Badges</DialogTitle>
-                </DialogHeader>
-                <div className="mt-4 h-full overflow-y-auto pr-2 smooth-scroll">
-                  <AllBadges />
-                </div>
-              </DialogContent>
-            </Dialog>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="ghost" className="text-white">
-                  <Trophy className="mr-2" /> Leaderboard
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-4xl">
-                <DialogHeader>
-                  <DialogTitle>Detailed Leaderboard</DialogTitle>
-                </DialogHeader>
-                <DetailedLeaderboard />
-              </DialogContent>
-            </Dialog>
+          <div className="flex items-center space-x-4">
+            <nav className="flex items-center space-x-4">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="ghost" className="text-white">
+                    <Award className="mr-2" /> All Badges
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl h-[80vh] p-6 scrollbar-custom">
+                  <DialogHeader>
+                    <DialogTitle>All Available Badges</DialogTitle>
+                  </DialogHeader>
+                  <div className="mt-4 h-full overflow-y-auto pr-2 smooth-scroll">
+                    <AllBadges />
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <Button variant="ghost" className="text-white">
+                <Trophy className="mr-2" /> Leaderboard
+              </Button>
+              <Button variant="ghost" className="text-white" onClick={() => setIsChallengesModalOpen(true)}>
+                <Target className="mr-2" /> Challenges
+              </Button>
+            </nav>
             <Button
               variant="ghost"
               className="text-white"
-              onClick={() => setIsChallengesModalOpen(true)}
+              onClick={() => setIsAboutModalOpen(true)}
             >
-              <Target className="mr-2" /> Challenges
+              <HelpCircle className="mr-2" /> About
             </Button>
-            <div className="flex items-center space-x-4">
-              {/*<NotificationCenter />*/}
+            {isConnected && (
               <ConnectWallet
-                theme={theme}
-                btnTitle="Connect Wallet"
-                modalSize="wide"
+                theme={theme === 'dark' ? "dark" : "light"}
+                btnTitle="Disconnect"
+                className={`!bg-white dark:!bg-gray-800 !text-[#0393d4] dark:!text-white hover:!bg-gray-100 dark:hover:!bg-gray-700 !font-bold !py-2 !px-4 !rounded-full !text-sm !transition-all !duration-300 !ease-in-out !transform hover:!scale-105`}
               />
-            </div>
-          </nav>
+            )}
+          </div>
         </div>
       </header>
 
@@ -78,8 +83,14 @@ const Index = () => {
         <RecentBadgesFeed />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
           <div className="md:col-span-2">
-            <h2 className="text-3xl font-bold mb-6">Your Badges</h2>
-            <BadgeGrid />
+            {isConnected ? (
+              <>
+                <BadgeToggle filter={badgeFilter} setFilter={setBadgeFilter} />
+                <BadgeGrid filterType={badgeFilter} />
+              </>
+            ) : (
+              <ConnectWalletPrompt />
+            )}
           </div>
           <div>
             <Leaderboard />
@@ -91,6 +102,11 @@ const Index = () => {
       <ChallengesModal
         isOpen={isChallengesModalOpen}
         onClose={() => setIsChallengesModalOpen(false)}
+      />
+
+      <AboutModal
+        isOpen={isAboutModalOpen}
+        onClose={() => setIsAboutModalOpen(false)}
       />
 
       {/* Floating theme toggle button */}

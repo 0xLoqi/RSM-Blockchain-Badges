@@ -14,7 +14,7 @@ const Leaderboard = () => {
   return (
     <Card className="mb-8">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold">Leaderboard</CardTitle>
+        <CardTitle className="text-2xl font-bold">Top 5 Badge Holders</CardTitle>
       </CardHeader>
       <CardContent>
         {leaderboardData.map((user, index) => (
