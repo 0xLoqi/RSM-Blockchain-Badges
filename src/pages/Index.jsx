@@ -1,24 +1,23 @@
 import React, { useState } from 'react';
-import { useAddress, useConnectionStatus, ConnectWallet } from "@thirdweb-dev/react";
-import { useTheme } from "next-themes";
-
-// Lucide icons
-import { Award, Trophy, Target, HelpCircle } from 'lucide-react';
-
-// UI components
+import { Award, Trophy, Target, Sun, Moon, HelpCircle } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-
-// Custom components
 import BadgeGrid from '../components/BadgeGrid';
-import BadgeToggle from '../components/BadgeToggle';
 import Leaderboard from '../components/Leaderboard';
 import Challenges from '../components/Challenges';
 import AllBadges from '../components/AllBadges';
 import RecentBadgesFeed from '../components/RecentBadgesFeed';
+import DetailedLeaderboard from '../components/DetailedLeaderboard';
+import { useTheme } from "next-themes";
+import ThemeToggle from '../components/ThemeToggle';
+import { ConnectWallet } from "@thirdweb-dev/react";
 import ChallengesModal from '../components/ChallengesModal';
 import AboutModal from '../components/AboutModal';
+import BadgeToggle from '../components/BadgeToggle';
 import ConnectWalletPrompt from '../components/ConnectWalletPrompt';
+import { useAddress, useConnectionStatus } from "@thirdweb-dev/react";
+
+// Removed: import NotificationCenter from '../components/NotificationCenter';
 
 const Index = () => {
   const { theme, setTheme } = useTheme();
