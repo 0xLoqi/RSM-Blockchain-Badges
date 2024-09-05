@@ -5,8 +5,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Lock } from 'lucide-react'; // Import the Lock icon from lucide-react
 
 const badges = [
-  { name: "Cammed Up", description: "Awarded for turning on your webcam during 5 meetings.", image: "https://i.imgur.com/KwxWbRB.gif", date: "2024-03-15", score: 200, tier: "Tier II", count: 1, metadata: { issuer: "RSM", blockchain: "Base", tokenId: "0x123" }, type: "earned" },
-  { name: "Question Master", description: "Earned for asking a thoughtful question during any session.", image: "https://i.imgur.com/yalOOoN.gif", date: "2024-02-28", score: 300, tier: "Tier III", count: 2, metadata: { issuer: "RSM", blockchain: "Base", tokenId: "0x456" }, type: "collected" },
+  { name: "Cammed Up", description: "Awarded for turning on your webcam during 5 meetings.", image: "https://i.imgur.com/Ech1JIZ.gif", date: "2024-03-15", score: 200, tier: "Tier II", count: 1, metadata: { issuer: "RSM", blockchain: "Base", tokenId: "0x123" }, type: "earned" },
+  { name: "Question Master", description: "Earned for asking a thoughtful question during any session.", image: "https://i.imgur.com/q876DyX.gif", date: "2024-02-28", score: 300, tier: "Tier III", count: 2, metadata: { issuer: "RSM", blockchain: "Base", tokenId: "0x456" }, type: "collected" },
   { name: "Chat Contributor", description: "Earned for contributing meaningfully in chat.", image: "https://i.imgur.com/KwxWbRB.gif", date: "2024-01-10", score: 300, tier: "Tier III", count: 1, metadata: { issuer: "RSM", blockchain: "Base", tokenId: "0x789" }, type: "earned" },
   { name: "Brunch Buddy", description: "Given for attending any Brunch and Learn session.", image: "https://i.imgur.com/tspXtQQ.gif", date: "2023-12-05", score: 200, tier: "Tier II", count: 3, metadata: { issuer: "RSM", blockchain: "Base", tokenId: "0xabc" }, type: "collected" },
   { name: "Office Hours Hero", description: "Awarded for each office hours session attended.", image: "https://i.imgur.com/yalOOoN.gif", date: "2023-11-20", score: 300, tier: "Tier III", count: 1, metadata: { issuer: "RSM", blockchain: "Base", tokenId: "0xdef" }, type: "earned" },
