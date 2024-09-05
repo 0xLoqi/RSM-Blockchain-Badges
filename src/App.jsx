@@ -10,6 +10,7 @@ const App = () => (
   <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
     <CustomThirdwebProvider
       supportedWallets={[
+        coinbaseWallet(),
         embeddedWallet({
           auth: {
             options: [
@@ -20,11 +21,10 @@ const App = () => (
             ],
           },
         }),
-        coinbaseWallet(),
         metamaskWallet(),
         walletConnect(),
       ]}
-      clientId="9b75a93ae30f590afc1703447af59a84"
+      clientId={import.meta.env.VITE_THIRDWEB_CLIENT_ID}
     >
       <TooltipProvider>
         <Toaster />

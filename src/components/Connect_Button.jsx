@@ -8,7 +8,7 @@ import {
 import { ethereum } from "thirdweb/chains";
 
 const client = createThirdwebClient({
-    clientId: "9b75a93ae30f590afc1703447af59a84",
+    clientId: import.meta.env.VITE_THIRDWEB_CLIENT_ID,
 });
 
 const wallets = [
