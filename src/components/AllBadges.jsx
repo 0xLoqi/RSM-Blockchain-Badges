@@ -105,37 +105,37 @@ const AllBadges = () => {
   }, []);
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-white dark:bg-gray-800">
       <Input
         type="text"
         placeholder="Search badges..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="mb-4"
+        className="mb-4 text-gray-800 dark:text-white bg-white dark:bg-gray-700"
       />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto">
         {filteredBadges.map((badge, index) => (
-          <Card key={index} className="hover:shadow-xl transition-shadow duration-300 cursor-pointer" onClick={() => handleBadgeClick(badge)}>
+          <Card key={index} className="hover:shadow-xl transition-shadow duration-300 cursor-pointer bg-white dark:bg-gray-700" onClick={() => handleBadgeClick(badge)}>
             <CardHeader>
-              <CardTitle className="text-lg text-white">{badge.name}</CardTitle>
+              <CardTitle className="text-lg text-gray-800 dark:text-white">{badge.name}</CardTitle>
             </CardHeader>
             <CardContent>
               <img src={badge.image} alt={badge.name} className="w-full h-32 object-contain mb-2" />
-              <p className="text-sm text-gray-300 mb-2">{badge.description}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">{badge.description}</p>
               <Badge className="bg-blue-500 text-white">{badge.weight} points</Badge>
             </CardContent>
           </Card>
         ))}
       </div>
       <Dialog open={!!selectedBadge} onOpenChange={() => setSelectedBadge(null)}>
-        <DialogContent className="sm:max-w-[425px] bg-gray-800 text-white">
+        <DialogContent className="sm:max-w-[425px] bg-white dark:bg-gray-800">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold">{selectedBadge?.name}</DialogTitle>
+            <DialogTitle className="text-2xl font-bold text-gray-800 dark:text-white">{selectedBadge?.name}</DialogTitle>
           </DialogHeader>
           <div className="mt-4">
             <img src={selectedBadge?.image} alt={selectedBadge?.name} className="w-full h-48 object-contain mb-4" />
-            <p className="text-sm mb-2"><strong>Description:</strong> {selectedBadge?.description}</p>
-            <p className="text-sm mb-2"><strong>Behavior to Incentivize:</strong> {selectedBadge?.behavior_to_incentivize}</p>
+            <p className="text-sm mb-2 text-gray-700 dark:text-gray-300"><strong>Description:</strong> {selectedBadge?.description}</p>
+            <p className="text-sm mb-2 text-gray-700 dark:text-gray-300"><strong>Behavior to Incentivize:</strong> {selectedBadge?.behavior_to_incentivize}</p>
             <Badge className="bg-blue-500 text-white">{selectedBadge?.weight} points</Badge>
           </div>
         </DialogContent>

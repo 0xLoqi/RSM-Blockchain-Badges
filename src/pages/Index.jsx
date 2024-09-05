@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import BadgeGrid from '../components/BadgeGrid';
 import Leaderboard from '../components/Leaderboard';
 import Challenges from '../components/Challenges';
+//import NotificationCenter from '../components/NotificationCenter';
 import AllBadges from '../components/AllBadges';
 import RecentBadgesFeed from '../components/RecentBadgesFeed';
 import DetailedLeaderboard from '../components/DetailedLeaderboard';
@@ -16,8 +17,6 @@ import AboutModal from '../components/AboutModal';
 import BadgeToggle from '../components/BadgeToggle';
 import ConnectWalletPrompt from '../components/ConnectWalletPrompt';
 import { useAddress, useConnectionStatus } from "@thirdweb-dev/react";
-
-// Removed: import NotificationCenter from '../components/NotificationCenter';
 
 const Index = () => {
   const { theme, setTheme } = useTheme();
