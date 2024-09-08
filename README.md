@@ -91,3 +91,29 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Contact
 
 For any inquiries or support, please contact the development team at blockchain-badges@rsm.com.
+
+## TODO
+
+### High Priority
+- [ ] Fix earned vs collected badge logic
+  - [ ] Consider removing collection aspect (currently aesthetic only)
+- [ ] Implement proper visualization for earned badges to appear permanent
+- [ ] Implement leaderboard logic
+- [ ] Connect recent badge awards to actual data source
+
+### Medium Priority
+- [ ] Add Alchemy badge for both day and night mode
+  - Reference: [Alchemy Verified Badge](https://docs.alchemy.com/docs/alchemy-verified-badge)
+- [ ] Improve mobile responsiveness
+- [ ] Design and create badge contracts on Base mainnet
+  - [ ] Brainstorm and finalize badge concepts
+  - [ ] Design badge visuals
+  - [ ] Develop and deploy smart contracts
+
+### Low Priority
+- [ ] Switch codebase to Base Mainnet
+- [ ] Implement caching to optimize Alchemy compute units usage when fetching badges
+
+### Ongoing
+- [ ] Refactor and optimize code as needed
+- [ ] Update documentation to reflect new changes and features
