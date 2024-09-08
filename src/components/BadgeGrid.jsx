@@ -55,8 +55,15 @@ const BadgeGrid = ({ filterType }) => {
       const fetchedBadges = await Promise.all(ownedEditions.map(async nft => {
         console.log("Fetching metadata for NFT:", nft.tokenId);
         const metadata = await alchemy.nft.getNftMetadata(contractAddress, nft.tokenId);
-        console.log("Metadata received for NFT", nft.tokenId, ":", metadata);
+        console.log("Full metadata for NFT", nft.tokenId, ":", JSON.stringify(metadata, null, 2));
         
+        // Determine the name
+        let name = metadata.title || metadata.name || metadata.rawMetadata?.name;
+        if (!name) {
+          name = `Badge ${nft.tokenId}`;
+          console.warn(`No name found for NFT ${nft.tokenId}, using fallback:`, name);
+        }
+
         // Safely access the image URL
         let imageUrl = null;
         if (metadata.media && metadata.media.length > 0) {
@@ -71,8 +78,8 @@ const BadgeGrid = ({ filterType }) => {
 
         return {
           tokenId: nft.tokenId,
-          name: metadata.title || `Badge ${nft.tokenId}`,
-          description: metadata.description || 'No description available',
+          name: name,
+          description: metadata.description || metadata.rawMetadata?.description || 'No description available',
           image: imageUrl,
           attributes: metadata.rawMetadata?.attributes || [],
           external_url: metadata.rawMetadata?.external_url,
