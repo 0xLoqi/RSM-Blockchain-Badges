@@ -1,93 +1,122 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAddress } from "@thirdweb-dev/react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Lock } from 'lucide-react'; // Import the Lock icon from lucide-react
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { alchemy } from '../lib/alchemy';
 
-const badges = [
-  { name: "Cammed Up", description: "Awarded for turning on your webcam during 5 meetings.", image: "https://i.imgur.com/Ech1JIZ.gif", date: "2024-03-15", score: 200, tier: "Tier II", count: 1, metadata: { issuer: "RSM", blockchain: "Base", tokenId: "0x123" }, type: "earned" },
-  { name: "Question Master", description: "Earned for asking a thoughtful question during any session.", image: "https://i.imgur.com/q876DyX.gif", date: "2024-02-28", score: 300, tier: "Tier III", count: 2, metadata: { issuer: "RSM", blockchain: "Base", tokenId: "0x456" }, type: "collected" },
-  { name: "Chat Contributor", description: "Earned for contributing meaningfully in chat.", image: "https://i.imgur.com/KwxWbRB.gif", date: "2024-01-10", score: 300, tier: "Tier III", count: 1, metadata: { issuer: "RSM", blockchain: "Base", tokenId: "0x789" }, type: "earned" },
-  { name: "Brunch Buddy", description: "Given for attending any Brunch and Learn session.", image: "https://i.imgur.com/tspXtQQ.gif", date: "2023-12-05", score: 200, tier: "Tier II", count: 3, metadata: { issuer: "RSM", blockchain: "Base", tokenId: "0xabc" }, type: "collected" },
-  { name: "Office Hours Hero", description: "Awarded for each office hours session attended.", image: "https://i.imgur.com/yalOOoN.gif", date: "2023-11-20", score: 300, tier: "Tier III", count: 1, metadata: { issuer: "RSM", blockchain: "Base", tokenId: "0xdef" }, type: "earned" },
-  { name: "Feedback Champion", description: "Earned for providing valuable feedback on sessions.", image: "https://i.imgur.com/yalOOoN.gif", date: "2023-10-15", score: 250, tier: "Tier II", count: 2, metadata: { issuer: "RSM", blockchain: "Base", tokenId: "0xghi" }, type: "collected" },
-  { name: "Blockchain Explorer", description: "Awarded for completing the Blockchain Basics course.", image: "https://i.imgur.com/yalOOoN.gif", date: "2023-09-01", score: 400, tier: "Tier IV", count: 1, metadata: { issuer: "RSM", blockchain: "Base", tokenId: "0xjkl" }, type: "earned" },
-  { name: "Smart Contract Wizard", description: "Earned for deploying your first smart contract.", image: "https://i.imgur.com/tspXtQQ.gif", date: "2023-08-10", score: 500, tier: "Tier V", count: 4, metadata: { issuer: "RSM", blockchain: "Base", tokenId: "0xmno" }, type: "collected" },
-];
+const contractAddress = "0x959cf5441d19dfc7a497aaa455b1ccbd430274db";
+const editionIds = ["1", "2", "3"];
 
 const BadgeGrid = ({ filterType }) => {
+  const [badges, setBadges] = useState([]);
   const [selectedBadge, setSelectedBadge] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const address = useAddress();
 
-  const filteredBadges = badges.filter(badge => badge.type === filterType);
+  useEffect(() => {
+    if (address) {
+      fetchBadges();
+    }
+  }, [address, filterType]);
 
-  const getTierColor = (tier) => {
-    switch (tier) {
-      case "Tier I": return "bg-blue-500";
-      case "Tier II": return "bg-green-500";
-      case "Tier III": return "bg-yellow-500";
-      case "Tier IV": return "bg-purple-500";
-      case "Tier V": return "bg-red-500";
-      default: return "bg-gray-500";
+  const fetchBadges = async () => {
+    setIsLoading(true);
+    try {
+      const nfts = await alchemy.nft.getNftsForOwner(address, {
+        contractAddresses: [contractAddress],
+      });
+
+      const ownedEditions = nfts.ownedNfts.filter(nft => 
+        editionIds.includes(nft.tokenId)
+      );
+
+      const transfers = await alchemy.core.getAssetTransfers({
+        fromBlock: "0x0",
+        toAddress: address,
+        contractAddresses: [contractAddress],
+        category: ["erc721", "erc1155"],
+      });
+
+      const earnedEditions = ownedEditions.filter(nft => {
+        const transfer = transfers.transfers.find(t => t.tokenId === nft.tokenId);
+        return transfer && transfer.from === "0x0000000000000000000000000000000000000000";
+      });
+
+      const collectedEditions = ownedEditions.filter(nft => 
+        !earnedEditions.some(earned => earned.tokenId === nft.tokenId)
+      );
+
+      const fetchedBadges = await Promise.all((filterType === 'earned' ? earnedEditions : collectedEditions).map(async nft => {
+        const metadata = await alchemy.nft.getNftMetadata(contractAddress, nft.tokenId);
+        return {
+          tokenId: nft.tokenId,
+          name: metadata.title,
+          description: metadata.description,
+          image: metadata.media && metadata.media[0] ? metadata.media[0].gateway : null,
+          attributes: metadata.rawMetadata?.attributes || [],
+          external_url: metadata.rawMetadata?.external_url,
+          animation_url: metadata.rawMetadata?.animation_url,
+          background_color: metadata.rawMetadata?.background_color
+        };
+      }));
+
+      setBadges(fetchedBadges);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  if (isLoading) return <div>Loading badges...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
-    <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredBadges.map((badge, index) => (
-          <Card
-            key={index}
-            className={`hover:shadow-xl transition-shadow duration-300 cursor-pointer transform hover:scale-105 overflow-hidden ${filterType === 'earned' ? 'border-2 border-green-500' : ''
-              }`}
-            onClick={() => setSelectedBadge(badge)}
-          >
-            <CardHeader className="text-center relative p-4">
-              {filterType === 'collected' && badge.count > 1 && (
-                <div className="absolute top-2 right-2 bg-[#0393d4] text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">
-                  x{badge.count}
-                </div>
-              )}
-              {filterType === 'earned' && (
-                <div className="absolute top-2 left-2 bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center">
-                  <Lock size={16} />
-                </div>
-              )}
-            </CardHeader>
-            <CardContent className="flex flex-col items-center p-4 space-y-4">
-              <div className="relative">
-                <img src={badge.image} alt={badge.name} className="w-48 h-48 object-contain" />
-              </div>
-              <Badge className="bg-[#3f9c35] text-white font-semibold px-3 py-1 text-base">{badge.name}</Badge>
-              <p className="text-sm text-gray-500">
-                {filterType === 'earned' ? 'Earned' : 'Collected'}: {badge.date}
-              </p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      {badges.map((badge) => (
+        <Card key={badge.tokenId} className="cursor-pointer hover:shadow-lg transition-shadow duration-300" onClick={() => setSelectedBadge(badge)}>
+          <CardHeader className="p-4">
+            <h3 className="text-lg font-semibold">{badge.name}</h3>
+          </CardHeader>
+          <CardContent className="p-4">
+            {badge.image && <img src={badge.image} alt={badge.name} className="w-full h-32 object-contain mb-2" />}
+            <p className="text-sm text-gray-600 mb-2">{badge.description}</p>
+            <Badge variant="secondary">{filterType === 'earned' ? 'Earned' : 'Collected'}</Badge>
+          </CardContent>
+        </Card>
+      ))}
 
       <Dialog open={!!selectedBadge} onOpenChange={() => setSelectedBadge(null)}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-2xl">{selectedBadge?.name}</DialogTitle>
-            <DialogDescription className="text-lg">{selectedBadge?.description}</DialogDescription>
+            <DialogTitle>{selectedBadge?.name}</DialogTitle>
           </DialogHeader>
-          <div className="flex flex-col items-center mt-4">
-            <img src={selectedBadge?.image} alt={selectedBadge?.name} className="w-80 h-80 object-contain mb-4" />
-            <Badge className={`${getTierColor(selectedBadge?.tier)} text-white font-semibold px-3 py-1 text-lg mb-2`}>{selectedBadge?.tier}</Badge>
-            <Badge className="bg-[#3f9c35] text-white font-semibold px-3 py-1 text-lg mb-2">{selectedBadge?.name}</Badge>
-            <p className="text-lg text-gray-700 mt-2">Earned: {selectedBadge?.date}</p>
-            <p className="text-xl font-bold mt-1">Score: {selectedBadge?.score}</p>
-            <div className="mt-4 text-left w-full">
-              <h3 className="text-xl font-semibold mb-2">Metadata:</h3>
-              <p><strong>Issuer:</strong> {selectedBadge?.metadata.issuer}</p>
-              <p><strong>Blockchain:</strong> {selectedBadge?.metadata.blockchain}</p>
-              <p><strong>Token ID:</strong> {selectedBadge?.metadata.tokenId}</p>
-            </div>
+          <div className="mt-4">
+            {selectedBadge?.image && <img src={selectedBadge.image} alt={selectedBadge.name} className="w-full h-48 object-contain mb-4" />}
+            <p className="text-sm mb-2"><strong>Description:</strong> {selectedBadge?.description}</p>
+            {selectedBadge?.attributes && (
+              <div className="mb-2">
+                <strong>Attributes:</strong>
+                <ul>
+                  {selectedBadge.attributes.map((attr, index) => (
+                    <li key={index}>{attr.trait_type}: {attr.value}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {selectedBadge?.external_url && (
+              <p className="text-sm mb-2">
+                <strong>External URL:</strong> <a href={selectedBadge.external_url} target="_blank" rel="noopener noreferrer">{selectedBadge.external_url}</a>
+              </p>
+            )}
+            <Badge variant="secondary">{filterType === 'earned' ? 'Earned' : 'Collected'}</Badge>
           </div>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 };
 
