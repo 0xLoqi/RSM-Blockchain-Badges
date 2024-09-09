@@ -9,19 +9,67 @@ import { Link } from 'react-router-dom';
 const contractAddress = "0x959cf5441d19dfc7a497aaa455b1ccbd430274db";
 const editionIds = ["1", "2", "3"];
 
-const DefaultBadge = () => (
-  <Card className="relative overflow-hidden">
-    <div className="absolute inset-0 bg-gray-200 animate-pulse"></div>
-    <CardHeader className="p-4">
-      <div className="h-6 bg-gray-300 rounded w-3/4"></div>
-    </CardHeader>
-    <CardContent className="p-4">
-      <div className="h-32 bg-gray-300 rounded mb-2"></div>
-      <div className="h-4 bg-gray-300 rounded w-1/2 mb-2"></div>
-      <div className="h-6 bg-gray-300 rounded w-1/4"></div>
-    </CardContent>
-  </Card>
-);
+const sampleImages = [
+  "https://i.imgur.com/KwxWbRB.gif",
+  "https://i.imgur.com/tspXtQQ.gif",
+  "https://i.imgur.com/DKW0Xy4.gif",
+  "https://i.imgur.com/BCwQU6x.gif"
+];
+
+const sampleBadges = [
+  {
+    name: "Cammed Up",
+    description: "Awarded for turning on your webcam during 5 meetings.",
+    weight: 200,
+  },
+  {
+    name: "Question Master",
+    description: "Earned for asking a thoughtful question during any session.",
+    weight: 300,
+  },
+  {
+    name: "Chat Contributor",
+    description: "Earned for contributing meaningfully in chat.",
+    weight: 300,
+  },
+  {
+    name: "Brunch Buddy",
+    description: "Given for attending any Brunch and Learn session.",
+    weight: 200,
+  },
+  {
+    name: "Office Hours Hero",
+    description: "Awarded for each office hours session attended.",
+    weight: 300,
+  },
+  {
+    name: "Client Collaborator",
+    description: "Given for successfully completing a project with a blockchain client.",
+    weight: 800,
+  },
+  {
+    name: "Feedback Champion",
+    description: "Awarded for offering detailed and constructive feedback.",
+    weight: 400,
+  },
+  {
+    name: "Blockchain Basics",
+    description: "Completed the Blockchain Basics course.",
+    weight: 500,
+  }
+].map((badge, index) => ({
+  ...badge,
+  image: sampleImages[index % sampleImages.length]
+}));
+
+// Function to shuffle array
+const shuffleArray = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+};
 
 const BadgeGrid = ({ filterType }) => {
   const [badges, setBadges] = useState([]);
@@ -52,10 +100,23 @@ const BadgeGrid = ({ filterType }) => {
       );
       console.log("Owned editions:", ownedEditions);
 
+      // Fetch transfer history
+      const transfers = await alchemy.core.getAssetTransfers({
+        fromBlock: "0x0",
+        toAddress: address,
+        contractAddresses: [contractAddress],
+        category: ["erc721", "erc1155"],
+      });
+      console.log("Transfer history:", transfers);
+
       const fetchedBadges = await Promise.all(ownedEditions.map(async nft => {
         console.log("Fetching metadata for NFT:", nft.tokenId);
         const metadata = await alchemy.nft.getNftMetadata(contractAddress, nft.tokenId);
         console.log("Full metadata for NFT", nft.tokenId, ":", JSON.stringify(metadata, null, 2));
+        
+        // Determine if the badge was earned or collected
+        const transfer = transfers.transfers.find(t => t.tokenId === nft.tokenId);
+        const isEarned = transfer && transfer.from === "0x0000000000000000000000000000000000000000";
         
         // Determine the name
         let name = metadata.title || metadata.name || metadata.rawMetadata?.name;
@@ -84,7 +145,9 @@ const BadgeGrid = ({ filterType }) => {
           attributes: metadata.rawMetadata?.attributes || [],
           external_url: metadata.rawMetadata?.external_url,
           animation_url: metadata.rawMetadata?.animation_url,
-          background_color: metadata.rawMetadata?.background_color
+          background_color: metadata.rawMetadata?.background_color,
+          isEarned: isEarned,
+          isOwned: true
         };
       }));
 
@@ -105,18 +168,28 @@ const BadgeGrid = ({ filterType }) => {
 
   // Check if badges is undefined or empty
   if (!badges || badges.length === 0) {
+    const randomSampleBadges = shuffleArray([...sampleBadges]).slice(0, 6);
     return (
       <div className="relative">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 blur-sm">
-          {[...Array(8)].map((_, index) => (
-            <DefaultBadge key={index} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 blur-sm">
+          {randomSampleBadges.map((badge, index) => (
+            <Card key={index} className="overflow-hidden">
+              <CardHeader className="p-6">
+                <h3 className="text-xl font-semibold">{badge.name}</h3>
+              </CardHeader>
+              <CardContent className="p-6">
+                <img src={badge.image} alt={badge.name} className="w-full h-48 object-contain mb-4" />
+                <p className="text-sm text-gray-600 mb-4">{badge.description}</p>
+                <Badge variant="secondary">{badge.weight} points</Badge>
+              </CardContent>
+            </Card>
           ))}
         </div>
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg text-center">
-            <h3 className="text-xl font-bold mb-4">Start Your Badge Collection!</h3>
-            <p className="mb-4">Connect your wallet and participate in challenges to earn badges.</p>
-            <Link to="/faq" className="text-blue-500 hover:text-blue-600 font-semibold">
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg text-center">
+            <h3 className="text-2xl font-bold mb-4">Your Badge Collection Awaits!</h3>
+            <p className="mb-6 text-lg">Participate in challenges and activities to start earning badges.</p>
+            <Link to="/faq" className="text-blue-500 hover:text-blue-600 font-semibold text-lg">
               Learn How to Earn Badges
             </Link>
           </div>
@@ -125,17 +198,23 @@ const BadgeGrid = ({ filterType }) => {
     );
   }
 
+  const filteredBadges = badges.filter(badge => 
+    filterType === 'all' || 
+    (filterType === 'earned' && badge.isEarned) || 
+    (filterType === 'collected' && !badge.isEarned)
+  );
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      {badges.map((badge) => (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      {filteredBadges.map((badge) => (
         <Card key={badge.tokenId} className="cursor-pointer hover:shadow-lg transition-shadow duration-300" onClick={() => setSelectedBadge(badge)}>
-          <CardHeader className="p-4">
-            <h3 className="text-lg font-semibold">{badge.name}</h3>
+          <CardHeader className="p-6">
+            <h3 className="text-xl font-semibold">{badge.name}</h3>
           </CardHeader>
-          <CardContent className="p-4">
-            {badge.image && <img src={badge.image} alt={badge.name} className="w-full h-32 object-contain mb-2" />}
-            <p className="text-sm text-gray-600 mb-2">{badge.description}</p>
-            <Badge variant="secondary">{filterType === 'earned' ? 'Earned' : 'Collected'}</Badge>
+          <CardContent className="p-6">
+            {badge.image && <img src={badge.image} alt={badge.name} className="w-full h-48 object-contain mb-4" />}
+            <p className="text-sm text-gray-600 mb-4">{badge.description}</p>
+            <Badge variant="secondary">{badge.isEarned ? 'Earned' : 'Collected'}</Badge>
           </CardContent>
         </Card>
       ))}
