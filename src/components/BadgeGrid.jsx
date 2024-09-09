@@ -107,17 +107,34 @@ const BadgeGrid = ({ filterType }) => {
         contractAddresses: [contractAddress],
         category: ["erc721", "erc1155"],
       });
-      console.log("Transfer history:", transfers);
+      console.log("All transfers:", transfers.transfers);
 
       const fetchedBadges = await Promise.all(ownedEditions.map(async nft => {
-        console.log("Fetching metadata for NFT:", nft.tokenId);
+        console.log("Processing NFT:", nft.tokenId);
         const metadata = await alchemy.nft.getNftMetadata(contractAddress, nft.tokenId);
-        console.log("Full metadata for NFT", nft.tokenId, ":", JSON.stringify(metadata, null, 2));
         
-        // Determine if the badge was earned or collected
-        const transfer = transfers.transfers.find(t => t.tokenId === nft.tokenId);
-        const isEarned = transfer && transfer.from === "0x0000000000000000000000000000000000000000";
+        console.log("All transfers for debugging:");
+        transfers.transfers.forEach(t => {
+          console.log(`Transfer - TokenID: ${t.tokenId}, From: ${t.from}, To: ${t.to}`);
+        });
         
+        // Sort transfers by block number (ascending order)
+        const sortedTransfers = transfers.transfers.sort((a, b) => parseInt(a.blockNum, 16) - parseInt(b.blockNum, 16));
+        
+        // Find the first transfer to this address for this contract
+        const firstTransfer = sortedTransfers.find(t => t.to.toLowerCase() === address.toLowerCase());
+        
+        let isEarned = false;
+        let transferFrom = 'No transfer found';
+        
+        if (firstTransfer) {
+          isEarned = firstTransfer.from === "0x0000000000000000000000000000000000000000";
+          transferFrom = firstTransfer.from;
+        }
+        
+        console.log(`NFT ${nft.tokenId} isEarned:`, isEarned);
+        console.log(`NFT ${nft.tokenId} from address:`, transferFrom);
+
         // Determine the name
         let name = metadata.title || metadata.name || metadata.rawMetadata?.name;
         if (!name) {
@@ -147,7 +164,8 @@ const BadgeGrid = ({ filterType }) => {
           animation_url: metadata.rawMetadata?.animation_url,
           background_color: metadata.rawMetadata?.background_color,
           isEarned: isEarned,
-          isOwned: true
+          isOwned: true,
+          transferFrom: transferFrom
         };
       }));
 
@@ -200,8 +218,8 @@ const BadgeGrid = ({ filterType }) => {
 
   const filteredBadges = badges.filter(badge => 
     filterType === 'all' || 
-    (filterType === 'earned' && badge.isEarned) || 
-    (filterType === 'collected' && !badge.isEarned)
+    (filterType === 'earned' && badge.isEarned === true) || 
+    (filterType === 'collected' && badge.isEarned === false)
   );
 
   return (
