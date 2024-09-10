@@ -106,30 +106,48 @@ const BadgeGrid = ({ filterType }) => {
         toAddress: address,
         contractAddresses: [contractAddress],
         category: ["erc721", "erc1155"],
+        withMetadata: true,
+        excludeZeroValue: true,
+        maxCount: "0x3e8", // Hex for 1000
+        order: "asc"
       });
       console.log("All transfers:", transfers.transfers);
+
+      // Sort transfers by block number (ascending order)
+      const sortedTransfers = transfers.transfers.sort((a, b) => parseInt(a.blockNum, 16) - parseInt(b.blockNum, 16));
 
       const fetchedBadges = await Promise.all(ownedEditions.map(async nft => {
         console.log("Processing NFT:", nft.tokenId);
         const metadata = await alchemy.nft.getNftMetadata(contractAddress, nft.tokenId);
         
-        console.log("All transfers for debugging:");
-        transfers.transfers.forEach(t => {
-          console.log(`Transfer - TokenID: ${t.tokenId}, From: ${t.from}, To: ${t.to}`);
+        // Find the first transfer for this specific NFT
+        const nftTransfer = sortedTransfers.find(t => {
+          if (t.erc1155Metadata && t.erc1155Metadata.length > 0) {
+            const transferTokenId = t.erc1155Metadata[0].tokenId;
+            return transferTokenId === `0x0${nft.tokenId}`;
+          }
+          return false;
         });
-        
-        // Sort transfers by block number (ascending order)
-        const sortedTransfers = transfers.transfers.sort((a, b) => parseInt(a.blockNum, 16) - parseInt(b.blockNum, 16));
-        
-        // Find the first transfer to this address for this contract
-        const firstTransfer = sortedTransfers.find(t => t.to.toLowerCase() === address.toLowerCase());
+        console.log(`Transfer for NFT ${nft.tokenId}:`, nftTransfer);
         
         let isEarned = false;
         let transferFrom = 'No transfer found';
         
-        if (firstTransfer) {
-          isEarned = firstTransfer.from === "0x0000000000000000000000000000000000000000";
-          transferFrom = firstTransfer.from;
+        if (nftTransfer) {
+          isEarned = nftTransfer.from === "0x0000000000000000000000000000000000000000";
+          transferFrom = nftTransfer.from;
+        } else {
+          // If no specific transfer found, check if there's any mint transaction before this NFT's first appearance
+          const mintTransfer = sortedTransfers.find(t => 
+            t.from === "0x0000000000000000000000000000000000000000" &&
+            t.erc1155Metadata && 
+            t.erc1155Metadata.length > 0 && 
+            t.erc1155Metadata[0].tokenId === `0x0${nft.tokenId}`
+          );
+          if (mintTransfer) {
+            isEarned = true;
+            transferFrom = mintTransfer.from;
+          }
         }
         
         console.log(`NFT ${nft.tokenId} isEarned:`, isEarned);
